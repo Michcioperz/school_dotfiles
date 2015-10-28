@@ -1,0 +1,12 @@
+#!/usr/bin/env python
+import argparse, os, re, subprocess, operator
+
+par = argparse.ArgumentParser()
+par.add_argument("command", type=str)
+par.add_argument("offset", nargs="?", type=int, default=0)
+args = par.parse_args()
+
+infhome = os.path.expanduser(os.path.join("~","informatyka"))
+fname = sorted([x for x in os.listdir(infhome) if re.match("\d{4}\-\d{2}\-\d{2}\.\d+\.cpp", x)], reverse=True)[args.offset]
+
+subprocess.call([args.command, fname])

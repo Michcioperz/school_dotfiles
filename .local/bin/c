@@ -1,0 +1,13 @@
+#!/usr/bin/env python2
+import argparse, subprocess, time, datetime, os.path, random
+
+parser = argparse.ArgumentParser()
+parser.add_argument("filename", type=str)
+parser.add_argument("--compiler", type=str, default="g++")
+args = parser.parse_args()
+
+outf = os.path.join("/tmp",datetime.datetime.utcnow().isoformat()+str(random.random())+".out")
+cmpl = subprocess.call([args.compiler, "-o", outf, args.filename])
+if cmpl == 0:
+    print("Compilation complete. Execution will now occur.")
+    subprocess.call([outf])

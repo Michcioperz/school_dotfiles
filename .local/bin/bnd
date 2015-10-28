@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+import argparse, datetime, os, shutil
+
+infhome = os.path.join(os.path.expanduser("~"),"informatyka")
+
+def next_file_name(date=datetime.date.today()):
+    datestr = date.isoformat()
+    try:
+        nextval = sorted([int(x[len(datestr)+1:-4]) for x in os.listdir(infhome) if x.startswith(datestr) and x.endswith(".cpp")])[-1]+1
+    except IndexError:
+        nextval = 1
+    return os.path.join(infhome, "%s.%i.cpp" % (datestr, nextval)) 
+
+if __name__ == "__main__":
+    fname = next_file_name()
+    print(fname)
+    shutil.copy(os.path.join(infhome,".template.cpp"),fname)
+    try:
+        os.unlink(os.path.join(infhome,"prelatest.cpp"))
+    except OSError: pass
+    if os.path.exists(os.path.join(infhome,"latest.cpp")): os.symlink(os.path.realpath(os.path.join(infhome,"latest.cpp")),os.path.join(infhome, "prelatest.cpp"))
+    try:
+        os.unlink(os.path.join(infhome,"latest.cpp"))
+    except OSError: pass
+    os.symlink(fname, os.path.join(infhome, "latest.cpp"))
